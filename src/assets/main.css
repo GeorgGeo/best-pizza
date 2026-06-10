@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+@source "./index.html";
+@source "./src/**/*.{vue,js,ts}";
+
+@theme {
+  --color-surface: rgba(255, 191, 155, 1);
+  --font-sans: "Nunito", sans-serif;
+}
+
+html {
+  /* скролл для плавной прокрутки */
+  scroll-behavior: auto;
+}
+
+body {
+  @apply font-sans text-base font-normal;
+}
