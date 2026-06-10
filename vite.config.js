@@ -14,6 +14,7 @@ export default defineConfig({
     vueDevTools(),
     tailwindcss(),
   ],
+  base: '/best-pizza/',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
