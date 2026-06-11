@@ -42,7 +42,7 @@ Modern pizza delivery web application built with Vue 3 and Vite.
 
 ## 📷 Screenshots
 
-_Add project screenshots here later_
+![Best Pizza Preview](./preview.png)
 
 ---
 
