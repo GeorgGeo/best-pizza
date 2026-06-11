@@ -1,44 +1,94 @@
-# best-pizza
+# 🍕 Best Pizza
 
-This template should help get you started developing with Vue 3 in Vite.
+Modern pizza delivery web application built with Vue 3 and Vite.
 
-## Recommended IDE Setup
+## 🚀 Live Demo
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+🌐 https://georggeo.github.io/best-pizza/
 
-## Recommended Browser Setup
+---
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+## 📌 Features
 
-## Customize configuration
+- 🛒 Shopping cart system
+- ❤️ Favorites system
+- 🔍 Product search
+- 🎯 Product filtering
+- 📄 Pagination
+- 🔄 Product sorting
+- 🔥 Toast notifications
+- 🎨 Smooth animations
+- 📱 Responsive design
+- 💾 Data saving with LocalStorage
+- 🪟 Modal windows
+- ⚡ Fast Vite build
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+---
 
-## Project Setup
+## 🛠️ Technologies Used
 
-```sh
+### Frontend
+- Vue 3
+- Composition API
+- JavaScript (ES6+)
+- Vite
+
+### Libraries
+- Vue Router
+- Vue Toastification
+- Auto Animate
+
+---
+
+## 📷 Screenshots
+
+_Add project screenshots here later_
+
+---
+
+## ⚙️ Installation
+
+Clone repository:
+
+```bash
+git clone https://github.com/GeorgGeo/best-pizza.git
+```
+
+Install dependencies:
+
+```bash
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+Run development server:
 
-```sh
+```bash
 npm run dev
 ```
 
-### Compile and Minify for Production
+Build for production:
 
-```sh
+```bash
 npm run build
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+---
 
-```sh
-npm run lint
-```
+## 🧠 What I Practiced In This Project
+
+- Component architecture in Vue 3
+- Working with Composition API
+- State management with reactive data
+- Dynamic rendering
+- Pagination logic
+- Search and filtering logic
+- LocalStorage integration
+- GitHub Pages deployment
+- UI/UX animations
+- Modal window management
+
+---
+
+## 📬 Contact
+
+GitHub: https://github.com/GeorgGeo
