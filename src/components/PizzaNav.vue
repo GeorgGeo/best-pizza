@@ -64,16 +64,17 @@ watch(sortOption, (newValue) => {
     <h2 class="catalog-title font-extrabold text-4xl">Все пиццы</h2>
 
     <!-- Контейнер для фильтров и сортировки -->
-    <div class="nav-controls flex items-center justify-between mt-4">
+    <div class="nav-controls flex items-center justify-between mt-4 xl:flex-row flex-col gap-4">
 
       <!-- Список категорий (Табы) -->
       <!-- :class="{ active: activeCategory === category.id }" -->
-      <ul class="category-list flex gap-5 rounded-2xl">
+      <ul class="category-list flex gap-5 rounded-2xl md:gap-2 flex-nowrap min-w-0">
+      <!-- <ul class="category-list flex overflow-x-auto gap-1 flex-nowrap w-full min-w-0"> -->
         <li v-for="category in categories"
         :key="category.id"
-        class="category-item"
+        class="category-item whitespace-nowrap"
         :class="[
-          'px-4 py-2 rounded-lg cursor-pointer transition',
+          'px-4 py-2 cursor-pointer transition',
           activeCategory === category.id
             ? 'bg-white font-semibold'
             : 'hover:bg-orange-400/50'
@@ -83,7 +84,7 @@ watch(sortOption, (newValue) => {
         </li>
 
         <!-- Кнопка "Ещё" (можно сделать выпадающим списком) -->
-        <li class="category-item more-btn relative" ref="dropdownRef">
+        <li class="category-item more-btn relative whitespace-nowrap" ref="dropdownRef">
           <button class="more-button" @click.stop="toggleDropdown">
             Ещё <span class="arrow">▼</span></button>
           <!-- Выпадающий список с дополнительными категориями -->
@@ -121,12 +122,14 @@ watch(sortOption, (newValue) => {
   padding: 0;
   margin: 0;
   background-color: rgba(0, 0, 0, 0.05);
-  padding: 5px 20px;
+  padding: 5px 8px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 .category-item {
-  border-radius: 10px; /* Скругление как на макете */
+  /* border-radius: 10px; Скругление как на макете */
   cursor: pointer;
-  padding: 5px 15px;
+  padding: 5px 8px;
   /* Серый цвет неактивных */
   transition: all 0.2s ease;
   /* background: #f3f3f3; Фон неактивной кнопки */
@@ -159,5 +162,13 @@ watch(sortOption, (newValue) => {
 .sort-icon {
   color: #ff6b00;
   font-size: 18px;
+}
+/* Скрываем скроллбар но оставляем скролл */
+.category-list {
+  -ms-overflow-style: none;  /* IE/Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+.category-list::-webkit-scrollbar {
+  display: none;             /* Chrome/Safari */
 }
 </style>
