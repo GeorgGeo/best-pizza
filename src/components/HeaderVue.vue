@@ -101,17 +101,17 @@ onBeforeUnmount(() => {
   <div class="header p-[10px] pb-5 border-b border-gray-400">
     <!-- <h1>Best Pizza</h1> -->
     <div class="container mx-auto">
-      <header class="header flex items-center justify-between px-8">
+      <header class="header flex items-center justify-between px-2 lg:px-8">
         <!-- Logo -->
         <a href="/" class="flex items-center gap-3">
           <img src="../assets/images/logo.png" alt="Best Pizza Logo" class="logo h-10 w-10" />
           <div>
-            <h1 class="text-xl font-bold text-black tracking-wider">NEXT PIZZA</h1>
-            <p class="text-gray-500">вкуснее уже не будет</p>
+            <h1 class="xl:text-xl text-md font-bold text-black tracking-wider">NEXT PIZZA</h1>
+            <p class="text-gray-500 lg:text-base text-[12px]">вкуснее уже не будет</p>
           </div>
         </a>
         <!-- Search -->
-         <div class="search flex-1 max-w-xl mx-8">
+         <div class="search flex-1 mx-2">
           <div class="relative">
             <input 
               v-model="search" 

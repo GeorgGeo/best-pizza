@@ -61,40 +61,43 @@ watch(sortOption, (newValue) => {
 <template>
   <div class="pizza-catalog-nav mb-6">
     <!-- Заголовок -->
-    <h2 class="catalog-title font-extrabold text-4xl">Все пиццы</h2>
+    <h2 class="catalog-title font-extrabold text-lg lg:text-4xl text-center p-2">Все пиццы</h2>
 
     <!-- Контейнер для фильтров и сортировки -->
     <div class="nav-controls flex items-center justify-between mt-4 xl:flex-row flex-col gap-4">
 
       <!-- Список категорий (Табы) -->
       <!-- :class="{ active: activeCategory === category.id }" -->
-      <ul class="category-list flex gap-5 rounded-2xl md:gap-2 flex-nowrap min-w-0">
-      <!-- <ul class="category-list flex overflow-x-auto gap-1 flex-nowrap w-full min-w-0"> -->
-        <li v-for="category in categories"
-        :key="category.id"
-        class="category-item whitespace-nowrap"
-        :class="[
-          'px-4 py-2 cursor-pointer transition',
-          activeCategory === category.id
-            ? 'bg-white font-semibold'
-            : 'hover:bg-orange-400/50'
-        ]"
-        @click="handleCategoryChange(category.id)">
-          {{ category.name }}
-        </li>
+      <!-- Обёртка для fade-эффекта -->
+      <div class="category-wrapper relative w-full">
+        <ul class="category-list flex gap-2 rounded-2xl overflow-x-auto w-full">
+        <!-- <ul class="category-list flex overflow-x-auto gap-1 flex-nowrap w-full min-w-0"> -->
+          <li v-for="category in categories"
+          :key="category.id"
+          class="category-item whitespace-nowrap"
+          :class="[
+            'px-4 py-2 cursor-pointer transition',
+            activeCategory === category.id
+              ? 'bg-white font-semibold'
+              : 'hover:bg-orange-400/50'
+          ]"
+          @click="handleCategoryChange(category.id)">
+            {{ category.name }}
+          </li>
 
-        <!-- Кнопка "Ещё" (можно сделать выпадающим списком) -->
-        <li class="category-item more-btn relative whitespace-nowrap" ref="dropdownRef">
-          <button class="more-button" @click.stop="toggleDropdown">
-            Ещё <span class="arrow">▼</span></button>
-          <!-- Выпадающий список с дополнительными категориями -->
-          <ul v-if="isOpen" class="dropdown-menu absolute top-full left-0 mt-2 w-40 px-2 bg-white shadow-lg rounded-lg z-10 border border-gray-200">
-            <li class="dropdown-item">Категория 4</li>
-            <li class="dropdown-item">Категория 5</li>
-            <li class="dropdown-item">Категория 6</li>
-          </ul>
-        </li>
-      </ul>
+          <!-- Кнопка "Ещё" (можно сделать выпадающим списком) -->
+          <li class="category-item more-btn relative whitespace-nowrap" ref="dropdownRef">
+            <button class="more-button" @click.stop="toggleDropdown">
+              Ещё <span class="arrow">▼</span></button>
+            <!-- Выпадающий список с дополнительными категориями -->
+            <ul v-if="isOpen" class="dropdown-menu absolute top-full left-0 mt-2 w-40 px-2 bg-white shadow-lg rounded-lg z-10 border border-gray-200">
+              <li class="dropdown-item">Категория 4</li>
+              <li class="dropdown-item">Категория 5</li>
+              <li class="dropdown-item">Категория 6</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
       <!-- /.category-list -->
       <!-- <p>Выбрана сортировка: {{ sortOption }}</p> -->
 
@@ -119,12 +122,23 @@ watch(sortOption, (newValue) => {
 <style scoped>
 .category-list {
   list-style: none;
-  padding: 0;
+  padding: 5px 8px;
   margin: 0;
   background-color: rgba(0, 0, 0, 0.05);
-  padding: 5px 8px;
-  -ms-overflow-style: none;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  scroll-behavior: smooth; /* Плавная прокрутка при клике на категорию */
+  scroll-snap-type: x proximity; /* Добавляем плавную прокрутку и "прилипание" к элементам при скролле */
+
+  -webkit-overflow-scrolling: touch;
+
   scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.category-list::-webkit-scrollbar {
+  display: none;
 }
 .category-item {
   /* border-radius: 10px; Скругление как на макете */
@@ -133,6 +147,8 @@ watch(sortOption, (newValue) => {
   /* Серый цвет неактивных */
   transition: all 0.2s ease;
   /* background: #f3f3f3; Фон неактивной кнопки */
+  flex-shrink: 0; /* Чтобы элементы не сжимались и не переносились на новую строку */
+  scroll-snap-align: start; /* "Прилипание" к началу элемента при скролле */
 }
 /* Блок сортировки */
 .sort-wrapper {
@@ -170,5 +186,25 @@ watch(sortOption, (newValue) => {
 }
 .category-list::-webkit-scrollbar {
   display: none;             /* Chrome/Safari */
+}
+@media (max-width: 768px) {
+  .category-wrapper::after {
+    content: '';
+
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    width: 40px;
+    height: 100%;
+
+    background: linear-gradient(
+      to right,
+      transparent,
+      #fefefe
+    );
+
+    pointer-events: none;
+  }
 }
 </style>
