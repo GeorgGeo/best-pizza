@@ -101,18 +101,18 @@ onBeforeUnmount(() => {
   <div class="header p-[10px] pb-5 border-b border-gray-400">
     <!-- <h1>Best Pizza</h1> -->
     <div class="container mx-auto">
-      <header class="header flex items-center justify-between px-2 lg:px-8">
+      <header class="header flex flex-col gap-4 px-2 lg:px-8 lg:grid lg:grid-cols-3 lg:items-center">
         <!-- Logo -->
-        <a href="/" class="flex items-center gap-3">
+        <a href="/" class="flex items-center gap-3 w-full lg:w-auto">
           <img src="../assets/images/logo.png" alt="Best Pizza Logo" class="logo h-10 w-10" />
-          <div>
+          <div class="min-w-0">
             <h1 class="xl:text-xl text-md font-bold text-black tracking-wider">NEXT PIZZA</h1>
             <p class="text-gray-500 lg:text-base text-[12px]">вкуснее уже не будет</p>
           </div>
         </a>
         <!-- Search -->
-         <div class="search flex-1 mx-2">
-          <div class="relative">
+         <div class="search w-full lg:col-span-1">
+          <div class="relative w-full max-w-xl">
             <input 
               v-model="search" 
               type="text" placeholder="Поиск пиццы..." 
@@ -123,7 +123,7 @@ onBeforeUnmount(() => {
           </div>
          </div>
         <!-- Profile and cart  -->
-        <div class="profile-cart flex items-center gap-6">
+        <div class="profile-cart flex items-center justify-between w-full lg:justify-end gap-3 lg:gap-5">
           <!-- profile with dropdown -->
           <div class="profile-dropdown relative" ref="dropdownRef" id="profile-dropdown">
             <button @click.stop="isAuth ? toggleDropdown() : emit('open-login')" class="flex items-center gap-2 focus:outline-none py-2 px-4 border-2 border-orange-500 text-orange-500 rounded-lg hover:bg-orange-50 transition-colors duration-200">
@@ -131,7 +131,7 @@ onBeforeUnmount(() => {
                 <div class="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold">
                   {{ currentUser.name.charAt(0).toUpperCase() }}
                 </div>
-                <span>{{ currentUser.name }}</span>
+                <span class="hidden sm:block">{{ currentUser.name }}</span>
               </template>
               <template v-else>
                 <svg width="13" height="14" viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg">
