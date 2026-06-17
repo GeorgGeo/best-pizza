@@ -7,6 +7,17 @@ import pizzas from "@/data/pizzaz.js";
 // 🔥 Шаг 1. Создаём состояние пагинации
 const currentPage = ref(1); // текущее значение страницы, по умолчанию 1
 const itemsPerPage = ref(4); // количество товаров на странице, можно изменить по своему усмотрению
+// Prev / Next кнопки
+const goToPrev = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+  }
+};
+const goToNext = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+  }
+};
 let resizeTimeout = null; // переменная для хранения таймаута при изменении размера окна
 
 const props = defineProps({
@@ -55,6 +66,30 @@ const currentPizzas = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value; // вычисляем индекс первого товара на текущей странице
   const end = start + itemsPerPage.value; // вычисляем индекс последнего товара на текущей странице
   return filteredPizzas.value.slice(start, end); // возвращаем срез массива отфильтрованных пицц, который соответствует текущей странице
+});
+// Ограничиваем количество видимых страниц
+const visiblePages = computed(() => {
+  
+  const total = totalPages.value; // общее количество страниц, вычисляемое на основе отфильтрованных пицц и количества товаров на странице
+  const current = currentPage.value; // текущая страница, выбранная пользователем
+
+  const maxVisible = window.innerWidth < 640 ? 3 : 5; // максимальное количество видимых страниц в зависимости от ширины экрана (3 для мобильных устройств, 5 для планшетов и десктопов)
+
+  let start = Math.max(current - Math.floor(maxVisible / 2), 1); // вычисляем начальную страницу для отображения, чтобы текущая страница была в центре, но не меньше 1
+  let end = start + maxVisible - 1; // вычисляем конечную страницу для отображения на основе начальной страницы и максимального количества видимых страниц
+
+  if (end > total) { // если конечная страница превышает общее количество страниц
+    end = total; // устанавливаем конечную страницу равной общему количеству страниц
+    start = Math.max(end - maxVisible + 1, 1); // корректируем начальную страницу, чтобы отображалось максимальное количество страниц, но не меньше 1
+  }
+
+  const pages = []; // массив для хранения номеров страниц, которые будут отображаться в пагинации
+
+  for (let i = start; i <= end; i++) { // заполняем массив номерами страниц от начальной до конечной
+    pages.push(i);
+  }
+
+  return pages;
 });
 // Делаем адаптив в зависимости от ширины экрана 
 const updateItemsPerPage = () => {
@@ -193,19 +228,33 @@ const getImageUrl = (imageName) => {
 const emit = defineEmits(['add-to-cart']); // ребёнок передаёт родителю, ребёнок не знает что делает родитель. Он просто говорит "товар добавлен в корзину"
 
 // Хуки жизненного цикла для установки и очистки слушателя события изменения размера окна
+const handleResize = () => {
+  clearTimeout(resizeTimeout); // очищаем предыдущий таймаут, если он есть, чтобы избежать слишком частого вызова функции при изменении размера окна
+  resizeTimeout = setTimeout(() => {
+    updateItemsPerPage(); // вызываем функцию обновления количества товаров на странице после изменения размера окна с небольшой задержкой, чтобы избежать слишком частого вызова при быстром изменении размера окна
+  }, 250);
+};
+// onMounted(() => {
+//   updateItemsPerPage(); // устанавливаем начальное количество товаров на странице при загрузке компонента
+//   window.addEventListener('resize', () => {
+//     clearTimeout(resizeTimeout); // очищаем предыдущий таймаут, если он есть, чтобы избежать слишком частого вызова функции при изменении размера окна
+//     resizeTimeout = setTimeout(() => {
+//       updateItemsPerPage(); // вызываем функцию обновления количества товаров на странице после изменения размера окна с небольшой задержкой, чтобы избежать слишком частого вызова при быстром изменении размера окна
+//     }, 250);
+//   }); // добавляем слушатель события изменения размера окна для адаптивности
+// });
+
+// onUnmounted(() => {
+//   window.removeEventListener('resize', updateItemsPerPage); // 👈 уборка за собой!
+// })
 onMounted(() => {
   updateItemsPerPage(); // устанавливаем начальное количество товаров на странице при загрузке компонента
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimeout); // очищаем предыдущий таймаут, если он есть, чтобы избежать слишком частого вызова функции при изменении размера окна
-    resizeTimeout = setTimeout(() => {
-      updateItemsPerPage(); // вызываем функцию обновления количества товаров на странице после изменения размера окна с небольшой задержкой, чтобы избежать слишком частого вызова при быстром изменении размера окна
-    }, 250);
-  }); // добавляем слушатель события изменения размера окна для адаптивности
+  window.addEventListener('resize', handleResize); // добавляем слушатель события изменения размера окна для адаптивности
 });
 
 onUnmounted(() => {
-  window.removeEventListener('resize', updateItemsPerPage); // 👈 уборка за собой!
-})
+  window.removeEventListener('resize', handleResize); // 👈 уборка за собой!
+});
 </script>
 
 <template>
@@ -216,8 +265,16 @@ onUnmounted(() => {
     <ProductCart v-for="pizza in currentPizzas" :key="pizza.id" :id="pizza.id" :image-url="getImageUrl(pizza.imageUrl)" :description="pizza.description" :title="pizza.title" :price="pizza.price" @add="(payload) => emit('add-to-cart', {...pizza, imageUrl: getImageUrl(pizza.imageUrl), img: payload.img})" />
     <!-- 🔥 Шаг 5. Добавляем кнопки пагинации -->
     <div class="pagination flex justify-center mt-6 col-span-full gap-2">
+      <!-- Prev -->
+      <button
+        @click="goToPrev"
+        :disabled="currentPage === 1"
+        class="px-3 py-2 rounded-md bg-gray-200 disabled:opacity-50"
+      >
+        Prev
+      </button>
       <button 
-        v-for="page in totalPages" 
+        v-for="page in visiblePages" 
         :key="page" 
         @click="currentPage = page"
         class="px-4 py-2 rounded-lg border transition"
@@ -230,6 +287,14 @@ onUnmounted(() => {
       >
         {{ page }}
       <!-- :class="currentPage === page ? 'bg-orange-500 text-white' : 'bg-gray-200 text-gray-700'" -->
+      </button>
+      <!-- Next -->
+      <button
+        @click="goToNext"
+        :disabled="currentPage === totalPages"
+        class="px-3 py-2 rounded-md bg-gray-200 disabled:opacity-50"
+      >
+        Next
       </button>
     </div>
   </div>
