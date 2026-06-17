@@ -6,11 +6,18 @@ import './assets/main.css'
 import Toast from "vue-toastification";
 // 🔥 Стили уведомлений
 import "vue-toastification/dist/index.css";
+// 🔥 Подключаем роутер
+import router from './router/index.js';
 
 const app = createApp(App);
+const routerInstance = router; // создаем экземпляр роутера
+
 
 // createApp(App).mount('#app');
-app.mount('#app'); // mount the app to the DOM - this is where the app will be rendered. На русском - "монтируем" приложение в DOM - это место, где будет отображаться приложение.
+// app.mount('#app'); // mount the app to the DOM - this is where the app will be rendered. На русском - "монтируем" приложение в DOM - это место, где будет отображаться приложение.
+
+// 🔥 Подключаем роутер к приложению
+app.use(routerInstance); // подключаем роутер к приложению
 
 // 🔥 Подключаем Toastification
 app.use(Toast, {
@@ -29,3 +36,6 @@ app.use(Toast, {
   dangerouslyUseHTMLString: true, // Разрешить использование HTML в сообщениях (будьте осторожны с этим, так как это может привести к XSS-уязвимостям, если вы не контролируете содержимое сообщений)
   icon: true, // Показывать иконки в уведомлениях
 });
+
+// 🔥 Монтируем приложение в DOM
+app.mount('#app'); // mount the app to the DOM - this is where the app will be rendered. На русском - "монтируем" приложение в DOM - это место, где будет отображаться приложение.
