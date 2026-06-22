@@ -12,6 +12,7 @@
 //   }
 // });
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue';
+import { RouterLink } from 'vue-router';
 const props = defineProps({
   totalCount: Number, // получаем количество товаров в корзине от родителя, чтобы отображать его в бейдже
   totalPrice: Number, // получаем общую сумму заказа в корзине от родителя, чтобы отображать её в шапке рядом с количеством товаров
@@ -103,13 +104,14 @@ onBeforeUnmount(() => {
     <div class="container mx-auto">
       <header class="header flex flex-col gap-4 px-2 lg:px-8 lg:grid lg:grid-cols-3 lg:items-center">
         <!-- Logo -->
-        <a href="/" class="flex items-center gap-3 w-full lg:w-auto">
+        <!-- <a href="/" class="flex items-center gap-3 w-full lg:w-auto"> -->
+        <RouterLink to="/" class="flex items-center gap-3 w-full lg:w-auto">
           <img src="../assets/images/logo.png" alt="Best Pizza Logo" class="logo h-10 w-10" />
           <div class="min-w-0">
             <h1 class="xl:text-xl text-md font-bold text-black tracking-wider">NEXT PIZZA</h1>
             <p class="text-gray-500 lg:text-base text-[12px]">вкуснее уже не будет</p>
           </div>
-        </a>
+        </RouterLink>
         <!-- Search -->
          <div class="search w-full lg:col-span-1">
           <div class="relative w-full max-w-xl">
@@ -143,9 +145,9 @@ onBeforeUnmount(() => {
             </button>
             <!-- Dropdown -->
             <div v-if="isOpen" class="dropdown absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2">
-              <a href="/settings" class="block px-4 py-2 text-sm hover:bg-gray-100">Настройки</a>
-              <a href="/orders" class="block px-4 py-2 text-sm hover:bg-gray-100">Заказы</a>
-              <a href="/logout" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Выйти</a>
+              <RouterLink to="/settings" class="block px-4 py-2 text-sm hover:bg-gray-100">Настройки</RouterLink>
+              <RouterLink to="/orders" class="block px-4 py-2 text-sm hover:bg-gray-100">Заказы</RouterLink>
+              <RouterLink to="/logout" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Выйти</RouterLink>
             </div>
           </div>
           <!-- /.profile -->

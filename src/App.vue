@@ -2,13 +2,14 @@
 // import { ref } from 'vue';
 // import MyHello from './components/MyHello.vue';
 import HeaderVue from './components/HeaderVue.vue';
-import PizzaNav from './components/PizzaNav.vue';
-import ProductCartList from './components/ProductCartList.vue';
+// import PizzaNav from './components/PizzaNav.vue';
+// import ProductCartList from './components/ProductCartList.vue';
 import DrawerCart from './components/DrawerCart.vue';
-import PizzaModalOrder from './components/PizzaModalOrder.vue';
+// import PizzaModalOrder from './components/PizzaModalOrder.vue';
 import LoginModal from './components/LoginModal.vue';
 import DisplayModalSms from './components/DisplayModalSms.vue';
-import { ref, computed, nextTick, watch } from 'vue';
+import { ref, computed, nextTick } from 'vue';
+import { RouterView } from 'vue-router';
 // import ProductCart from './components/ProductCart.vue';
 // 🚀 App.vue
 // └─ headerRef.value          → экземпляр HeaderVue
@@ -24,20 +25,25 @@ const headerRef = ref(null); // Экземпляр всего компонент
 //   message.value = data; // Обновляем сообщение, полученное от дочернего компонента
 //   console.log('message после изменения:', message); // Выводим в консоль объект ref, который содержит новое значение в свойстве value
 // };
-const isCartOpen = ref(false); // храним состояние открытости корзины, по умолчанию она закрыта
-const cartItems = ref([]); // храним массив товаров в корзине, по умолчанию он пустой
-const searchQuery = ref(''); // храним строку поискового запроса, по умолчанию она пустая
-const sortOption = ref('rating'); // храним выбранную опцию сортировки, по умолчанию сортировка по рейтингу
-const activeCategory = ref('all'); // храним выбранную категорию, по умолчанию выбрана категория "Все"
-const isOpenModalOrder = ref(false); // храним состояние открытости модального окна заказа, по умолчанию оно закрыто
-const selectedPizza = ref(null); // храним данные выбранной пиццы для отображения в модальном окне заказа (чтобы передать данные в модалку), по умолчанию нет выбранной пиццы
-const isOpenLoginModal = ref(false); // храним состояние открытости модального окна логина, по умолчанию оно закрыто
-const isOpenSmsModal = ref(false); // храним состояние открытости модального окна SMS-кода, по умолчанию оно закрыто
+const isCartOpen = ref(false); //📦 (ОСТАВЛЯЕМ В РОДИТЕЛЕ) храним состояние открытости корзины, по умолчанию она закрыта
+const cartItems = ref([]); //📦 (ОСТАВЛЯЕМ В РОДИТЕЛЕ) храним массив товаров в корзине, по умолчанию он пустой
+// 🔑 выносим в компонент HomeView.vue 🔥
+// const searchQuery = ref(''); // храним строку поискового запроса, по умолчанию она пустая
+// 🔑 const sortOption = ref('rating'); выносим в компонент HomeView.vue 🔥
+// const sortOption = ref('rating'); // храним выбранную опцию сортировки, по умолчанию сортировка по рейтингу
+// 🔑 выносим в компонент HomeView.vue 🔥
+// const activeCategory = ref('all'); // храним выбранную категорию, по умолчанию выбрана категория "Все"
+// 🔑 выносим в компонент HomeView.vue 🔥
+// const isOpenModalOrder = ref(false); // храним состояние открытости модального окна заказа, по умолчанию оно закрыто
+// // 🔑 выносим в компонент HomeView.vue 🔥
+// const selectedPizza = ref(null); // храним данные выбранной пиццы для отображения в модальном окне заказа (чтобы передать данные в модалку), по умолчанию нет выбранной пиццы
+const isOpenLoginModal = ref(false); //📦 (ОСТАВЛЯЕМ В РОДИТЕЛЕ) храним состояние открытости модального окна логина, по умолчанию оно закрыто
+const isOpenSmsModal = ref(false); //📦 (ОСТАВЛЯЕМ В РОДИТЕЛЕ) храним состояние открытости модального окна SMS-кода, по умолчанию оно закрыто
 // ✅ Добавляем состояние для хранения сгенерированного кода из LoginModal.vue, чтобы потом передать его в DisplayModalSMS.vue для проверки правильности введённого кода пользователем
 const generatedSMSCode = ref(''); // храним сгенерированный код из LoginModal.vue, который должен прийти пользователю в SMS, по умолчанию он пустой
 const userPhone = ref(''); // храним отформатированный номер телефона из LoginModal.vue, по умолчанию он пустой
-const isAuthenticated = ref(false); // храним состояние аутентификации пользователя, по умолчанию пользователь не аутентифицирован
-const currentUser = ref(null); // храним данные текущего аутентифицированного пользователя, по умолчанию нет аутентифицированного пользователя
+const isAuthenticated = ref(false); //📦 (ОСТАВЛЯЕМ В РОДИТЕЛЕ) храним состояние аутентификации пользователя, по умолчанию пользователь не аутентифицирован
+const currentUser = ref(null); //📦 (ОСТАВЛЯЕМ В РОДИТЕЛЕ) храним данные текущего аутентифицированного пользователя, по умолчанию нет аутентифицированного пользователя
 // ✅ Функция открытия LoginModal.vue при клике на кнопку "Войти" в Header.vue
 const openLoginModal = () => {
   isOpenLoginModal.value = true; // открываем модальное окно логина
@@ -71,16 +77,18 @@ const removeItem = (id) => {
   console.log('Текущие товары в корзине:', cartItems.value);
 }
 // Создаём отдельную функцию для открытия модального окна заказа, чтобы передать в неё данные выбранной пиццы
-const openPizzaModal = (pizza) => {
-  // Когда пользователь кликает на кнопку "Добавить" в компоненте ProductCart.vue, он вызывает эту функцию и передаёт данные о пицце, которую он хочет заказать. Мы сохраняем эти данные в реактивную переменную selectedPizza, чтобы потом передать их в модальное окно заказа и отобразить информацию о выбранной пицце там.
-  // 💥 Когда открываешь модалку
-  selectedPizza.value = pizza; // сохраняем данные выбранной пиццы в реактивную переменную, чтобы потом передать эти данные в модальное окно заказа
-  isOpenModalOrder.value = true; // открываем модальное окно заказа
-  console.log('💥 Модальное окно заказа открыто для пиццы:', pizza);
-}
+// 🔑 выносим в компонент HomeView.vue 🔥
+// const openPizzaModal = (pizza) => {
+//   // Когда пользователь кликает на кнопку "Добавить" в компоненте ProductCart.vue, он вызывает эту функцию и передаёт данные о пицце, которую он хочет заказать. Мы сохраняем эти данные в реактивную переменную selectedPizza, чтобы потом передать их в модальное окно заказа и отобразить информацию о выбранной пицце там.
+//   // 💥 Когда открываешь модалку
+//   selectedPizza.value = pizza; // сохраняем данные выбранной пиццы в реактивную переменную, чтобы потом передать эти данные в модальное окно заказа
+//   isOpenModalOrder.value = true; // открываем модальное окно заказа
+//   console.log('💥 Модальное окно заказа открыто для пиццы:', pizza);
+// }
 const handleConfirmorder = (pizza) => {
   console.log('🔍 Получено из модалки:', pizza); // 👈 Смотрим, есть ли price
-  isOpenModalOrder.value = false; // закрываем модальное окно заказа после подтверждения заказа
+  // 🔑 выносим в компонент HomeView.vue 🔥
+  // isOpenModalOrder.value = false; // закрываем модальное окно заказа после подтверждения заказа
   animateToCart(pizza.img); // запускаем анимацию "летающей пиццы" при подтверждении заказа в модальном окне
   const existingItem = cartItems.value.find(item => item.id === pizza.id); // проверяем, есть ли уже такой товар в корзине по его id
   if (!existingItem) {
@@ -113,6 +121,7 @@ const addToCart = (pizza) => {
 }
 console.log(addToCart);
 // 🚀 Шаг 4. Делаем функцию “летающей пиццы”
+//📦 (ОСТАВЛЯЕМ В РОДИТЕЛЕ)
 const animateToCart = async (imgRef) => {
   // const img = event.target.closest('.cart-img')?.querySelector('img'); // находим изображение пиццы, от которого был клик
   const img = imgRef?.value || imgRef; // получаем DOM-элемент изображения пиццы из переданной ссылки (ref) в компоненте ProductCart.vue
@@ -205,11 +214,11 @@ const clearCartFunction = () => {
 }
 
 // сброс категории при поиске:
-watch(searchQuery, (newValue) => {
-  if (newValue) {
-    activeCategory.value = 'all'; // сбрасываем категорию на "Все" при вводе поискового запроса
-  }
-});
+// watch(searchQuery, (newValue) => {
+//   if (newValue) {
+//     activeCategory.value = 'all'; // сбрасываем категорию на "Все" при вводе поискового запроса
+//   }
+// });
 </script>
 
 <template>
@@ -226,7 +235,8 @@ watch(searchQuery, (newValue) => {
     </div> -->
     <DrawerCart  v-if="isCartOpen" :items="cartItems" :total-price="totalPrice" :tax-value="tax" @close="isCartOpen = false" @update-quantity="updateQuantity" @remove="removeItem" @clear-cart="clearCartFunction"/>
     <!-- Модальные окна -->
-    <PizzaModalOrder :is-open-modal-order="isOpenModalOrder" :pizza="selectedPizza" @close="isOpenModalOrder = false" @confirm="handleConfirmorder"/>
+    <!--  🔑 выносим в компонент HomeView.vue 🔥 -->
+    <!-- <PizzaModalOrder :is-open-modal-order="isOpenModalOrder" :pizza="selectedPizza" @close="isOpenModalOrder = false" @confirm="handleConfirmorder"/> -->
     <LoginModal :is-open-login-modal-props="isOpenLoginModal" @close="isOpenLoginModal = false" @send-code="handleSendCode"/>
     <DisplayModalSms 
       :is-open-sms-modal-props="isOpenSmsModal" 
@@ -245,14 +255,18 @@ watch(searchQuery, (newValue) => {
         :is-auth="isAuthenticated"
         :current-user = "currentUser"
         />
+        <!-- Навигационные ссылки -->
+        <!-- <RouterLink to="/">Главная</RouterLink>
+        <RouterLink to="/cart">Корзина</RouterLink>
+        <RouterLink to="/profile">Профиль</RouterLink> -->
         <!-- 🔥 добавляем обработчик события update-sort для получения выбранной опции сортировки от компонента PizzaNav. Передаём опцию сортировки в компонент PizzaNav -->
-        <PizzaNav @update-sort="(value) => sortOption = value" @update-category="(value) => activeCategory = value" />
+        <!-- <PizzaNav @update-sort="(value) => sortOption = value" @update-category="(value) => activeCategory = value" /> -->
         <!-- передаём строку поискового запроса и выбранную опцию сортировки в компонент ProductCartList для фильтрации и сортировки списка товаров -->
-        <ProductCartList @add-to-cart="openPizzaModal" :search-query-product="searchQuery" :sort-option-product="sortOption" :category="activeCategory"/>
+        <!-- <ProductCartList @add-to-cart="openPizzaModal" :search-query-product="searchQuery" :sort-option-product="sortOption" :category="activeCategory"/> -->
+        <RouterView  @add-to-cart="handleConfirmorder"/> <!-- Компонент для отображения текущего маршрута -->
       </div>
       
     </div>
-
 </template>
 
 <style scoped>
